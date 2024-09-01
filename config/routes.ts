@@ -69,6 +69,19 @@ export default [
     ],
   },
   {
+    path: '/config',
+    icon: 'icon-config',
+    name: '测试配置',
+    authority: ['superAdmin', 'admin'],
+    routes: [
+      {
+        path: '/config/environment',
+        name: '环境管理',
+        component: './Config/Environment',
+      },
+    ],
+  },
+  {
     name: '查询表格',
     icon: 'table',
     path: '/list',
