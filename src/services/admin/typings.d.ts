@@ -1,6 +1,8 @@
 // @ts-ignore
 /* eslint-disable */
 
+import {getEnvironments} from "@/services/admin/environment";
+
 declare namespace API {
   type CommonResponse<T = any> = {
     success?: boolean;
@@ -77,6 +79,7 @@ declare namespace API {
     /** id */
     id: string;
   };
+
   type getUsersParams = {
     /** current */
     current?: number;
@@ -84,6 +87,15 @@ declare namespace API {
     pageSize?: number;
     /** id */
     id?: string;
+    /** name */
+    name?: string;
+  };
+
+  type getEnvironmentsParams = {
+    /** current */
+    current?: number;
+    /** pageSize */
+    pageSize?: number;
     /** name */
     name?: string;
   };

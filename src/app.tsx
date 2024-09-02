@@ -8,8 +8,6 @@ import defaultSettings from '../config/defaultSettings';
 import {errorConfig} from './requestErrorConfig';
 import {currentUser as queryCurrentUser} from '@/services/admin/user';
 import React from 'react';
-
-const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
 /**
@@ -61,7 +59,7 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
       },
     },
     waterMarkProps: {
-      content: initialState?.currentUser?.username,
+      // content: initialState?.currentUser?.username,
     },
     footerRender: () => <Footer/>,
     onPageChange: () => {
@@ -91,14 +89,16 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
         width: '331px',
       },
     ],
-    links: isDev
-      ? [
-        <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
+    // links: isDev ?
+    links: [
+      <Link key="openapi" to="/" target="_blank">
+        <a href={"/"} target={"_blank"} rel="noreferrer">
           <LinkOutlined/>
-          <span>OpenAPI 文档</span>
-        </Link>,
-      ]
-      : [],
+          <span>项目文档</span>
+        </a>
+      </Link>,
+    ],
+    //  : [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
@@ -108,19 +108,19 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
       return (
         <>
           {children}
-          {isDev && (
-            <SettingDrawer
-              disableUrlParams
-              enableDarkTheme
-              settings={initialState?.settings}
-              onSettingChange={(settings) => {
-                setInitialState((preInitialState) => ({
-                  ...preInitialState,
-                  settings,
-                }));
-              }}
-            />
-          )}
+          {/*{isDev && (*/}
+          {/*  <SettingDrawer*/}
+          {/*    disableUrlParams*/}
+          {/*    enableDarkTheme*/}
+          {/*    settings={initialState?.settings}*/}
+          {/*    onSettingChange={(settings) => {*/}
+          {/*      setInitialState((preInitialState) => ({*/}
+          {/*        ...preInitialState,*/}
+          {/*        settings,*/}
+          {/*      }));*/}
+          {/*    }}*/}
+          {/*  />*/}
+          {/*)}*/}
         </>
       );
     },
@@ -134,6 +134,6 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request = {
-  baseURL: 'http://127.0.0.1:9099/api/v1',
+  baseURL: 'http://47.93.181.181:9099/api/v1',
   ...errorConfig,
 };
