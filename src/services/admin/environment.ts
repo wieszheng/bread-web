@@ -15,3 +15,47 @@ export async function getEnvironments(
     ...(options || {}),
   });
 }
+
+/** 新增环境 POST /api/v1/config/environment */
+export async function postEnvironment(
+  body: API.EnvironmentParams,
+  options?: { [key: string]: any },
+) {
+  return request<any>('/config/environment', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 修改环境 PUT /api/v1/config/environment */
+export async function putEnvironment(
+  body: API.UpdateEnvironmentParams,
+  options?: { [key: string]: any },
+) {
+  return request<any>('/config/environment', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 修改环境 PUT /api/v1/config/environment */
+export async function deleteEnvironmentId(
+  params: API.deleteEnvironmentIdParams,
+  options?: { [key: string]: any },
+) {
+  return request<any>('/config/environment', {
+    method: 'DELETE',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

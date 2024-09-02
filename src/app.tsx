@@ -134,6 +134,5 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request = {
-  baseURL: 'http://47.93.181.181:9099/api/v1',
   ...errorConfig,
 };

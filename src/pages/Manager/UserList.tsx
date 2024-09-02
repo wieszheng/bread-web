@@ -106,10 +106,10 @@ const UserList: React.FC = () => {
         defaultChecked={!is_valid}
         onChange={async (checked: boolean) => {
           await putUserState({id: record.id || '', is_valid: !checked})
-          message
-            .success('Delete successfully!'
-            )
-            .then(() => actionRef.current?.reload());
+          // message
+          //   .success('Delete successfully!'
+          //   )
+          //   .then(() => actionRef.current?.reload());
         }}/>
     },
     {
@@ -155,65 +155,64 @@ const UserList: React.FC = () => {
 
   return (
     <PageContainer title={indexTitle(id)}>
-      <Card>
-        <Modal
-          title="编辑用户"
-          width={500}
-          open={isModalOpen}
-          onOk={async () => {
-            const values = await form.getFieldsValue();
-            console.log('form', values)
-            await putUserRole({
-              ...values,
-              id: currentRow?.id || '',
-            })
-            setCurrentRow(undefined);
-            setIsModalOpen(false);
-            message
-              .success('Delete successfully!'
-              )
-              .then(() => actionRef.current?.reload());
-          }}
-          onCancel={() => setIsModalOpen(false)}
-        >
-          <Form
-            initialValues={currentRow}
-            form={form}
-          >
-            <Form.Item label="账号" name="username">
-              <Input placeholder="输入用户账号"/>
-            </Form.Item>
-            <Form.Item label="邮箱" name="email">
-              <Input placeholder="输入用户邮箱"/>
-            </Form.Item>
-            <Form.Item label="角色" name="role">
-              <Select>
-                <Select.Option key={0} value={0}>普通成员</Select.Option>
-                <Select.Option key={1} value={1}>组长</Select.Option>
-                <Select.Option key={2} value={2}>超级管理员</Select.Option>
-              </Select>
-            </Form.Item>
-          </Form>
-        </Modal>
-        <ProTable<API.CurrentUser>
-          headerTitle={'用户列表'}
-          actionRef={actionRef}
-          rowKey="id"
-          search={{
-            labelWidth: 120,
-          }}
-          request={async (params, sort, filter) => {
-            console.log(sort, filter);
-            const msg = await getUsers({...params});
-            return {
-              data: msg?.result?.data,
-              params,
-            };
-          }}
-          columns={columns}
-        ></ProTable>
-      </Card>
 
+      <Modal
+        title="编辑用户"
+        width={500}
+        open={isModalOpen}
+        onOk={async () => {
+          const values = await form.getFieldsValue();
+          console.log('form', values)
+          await putUserRole({
+            ...values,
+            id: currentRow?.id || '',
+          })
+          setCurrentRow(undefined);
+          setIsModalOpen(false);
+          // message
+          //   .success('Delete successfully!'
+          //   )
+          //   .then(() => actionRef.current?.reload());
+        }}
+        onCancel={() => setIsModalOpen(false)}
+      >
+        <Form
+          initialValues={currentRow}
+          form={form}
+        >
+          <Form.Item label="账号" name="username">
+            <Input placeholder="输入用户账号"/>
+          </Form.Item>
+          <Form.Item label="邮箱" name="email">
+            <Input placeholder="输入用户邮箱"/>
+          </Form.Item>
+          <Form.Item label="角色" name="role">
+            <Select>
+              <Select.Option key={0} value={0}>普通成员</Select.Option>
+              <Select.Option key={1} value={1}>组长</Select.Option>
+              <Select.Option key={2} value={2}>超级管理员</Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <ProTable<API.CurrentUser>
+        headerTitle={'用户列表'}
+        actionRef={actionRef}
+        rowKey="id"
+        search={{
+          labelWidth: 120,
+        }}
+        request={async (params, sort, filter) => {
+          console.log(sort, filter);
+          const msg = await getUsers({...params});
+          return {
+            data: msg?.result?.data,
+            params,
+          };
+        }}
+        columns={columns}
+      ></ProTable>
 
     </PageContainer>
   );

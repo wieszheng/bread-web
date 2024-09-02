@@ -1,8 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
 
-import {getEnvironments} from "@/services/admin/environment";
-
 declare namespace API {
   type CommonResponse<T = any> = {
     success?: boolean;
@@ -11,11 +9,6 @@ declare namespace API {
     result?: T;
   };
 
-  type Page = {
-    current?: number;
-    pageSize?: number;
-    total?: number;
-  };
   type CurrentUser = {
     nickname?: string;
     username?: string;
@@ -34,6 +27,27 @@ declare namespace API {
     phone?: string;
   };
 
+
+  type CurrentEnvironment = {
+    /** id */
+    id: string;
+    /** name */
+    name: string;
+    /** remarks */
+    remarks: string;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+    is_deleted: boolean;
+    created_by: number;
+    updated_by: string | null;
+    user_username: string;
+    user_nickname: string;
+    user_email: string | null;
+    user_phone: string | null;
+    user_avatar: string | null;
+
+  };
   type LoginResponse = CommonResponse<{
     data?: any;
     access_token?: string;
@@ -44,6 +58,7 @@ declare namespace API {
     current?: number;
     pageSize?: number;
   };
+
   type UpdateUserParam = {
     /** Username */
     username: string;
@@ -105,6 +120,7 @@ declare namespace API {
     id: string;
   };
 
+
   type RuleListItem = {
     key?: number;
     disabled?: boolean;
@@ -127,25 +143,26 @@ declare namespace API {
     success?: boolean;
   };
 
-  type FakeCaptcha = {
-    code?: number;
-    status?: string;
-  };
 
   type LoginParams = {
     username?: string;
     password?: string;
   };
 
-  type ErrorResponse = {
-    /** 业务约定的错误码 */
-    errorCode: string;
-    /** 业务上的错误信息 */
-    errorMessage?: string;
-    /** 业务上的请求是否成功 */
-    success?: boolean;
-  };
+  type EnvironmentParams = {
+    name?: string;
+    remarks?: string;
+  }
+  type UpdateEnvironmentParams = {
+    id?: number;
+    name?: string;
+    remarks?: string;
+  }
 
+  type deleteEnvironmentIdParams = {
+    /** env_id */
+    env_id: string;
+  };
   type NoticeIconList = {
     data?: NoticeIconItem[];
     /** 列表的内容总数 */
