@@ -1,19 +1,21 @@
-import React, {memo, useRef, useState} from 'react'
+import React, {memo, useEffect, useRef, useState} from 'react'
 import {
   ActionType,
   ModalForm,
   PageContainer,
   ProColumns,
   ProFormText,
-  ProFormTextArea,
-  ProTable
+  ProTable,
+  ProFormSelect
 } from "@ant-design/pro-components";
 import {Button, Form, Popconfirm, Space, Tag, Tooltip} from "antd";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import {useSetState} from "ahooks";
 import {deleteAddressId, getAddressS, postAddress, putAddress} from "@/services/admin/address";
 import {Access} from "@/components/Boot/Access";
-import {deleteEnvironmentId, postEnvironment, putEnvironment} from "@/services/admin/environment";
+import {getEnvironments} from "@/services/admin/environment";
+import {formItemLayout} from "@/constan";
+
 
 type operateType = "add" | "see" | "up";
 type ModalType = {
@@ -27,11 +29,26 @@ const Address: React.FC = () => {
     operateType: "add",
     nowData: null
   });
+  const [data, setData] = useState<API.CurrentEnvironment[]>([]);
   const actionRef = useRef<ActionType>();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getEnvironments({current: 1, pageSize: 99});
+        setData(response.result.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
 
-  const columns:ProColumns<API.CurrentAddress>[] = [
+      }
+    };
+    fetchData();
+  }, []);
+
+  const columns: ProColumns<API.CurrentAddress>[] = [
     {
       title: 'ID',
+      key: 'id',
       width: '5%',
       dataIndex: 'id',
       hideInForm: true,
@@ -40,9 +57,9 @@ const Address: React.FC = () => {
     {
       title: '环境',
       width: '8%',
-      key: 'env',
-      dataIndex: 'env',
-      render: env => <Tag>{env}</Tag>,
+      key: 'env_name',
+      dataIndex: 'env_name',
+      render: env => <Tag color='volcano'>{env}</Tag>,
     },
     {
       title: '名称',
@@ -104,7 +121,7 @@ const Address: React.FC = () => {
       valueType: 'option',
       hideInDescriptions: true,
       hideInForm: true,
-      width: '10%',
+      width: '12%',
       render: (_, record) => [
         <Access key={'update'} accessible={true}>
           <Tooltip placement="top" title="修改">
@@ -132,16 +149,24 @@ const Address: React.FC = () => {
               actionRef.current?.reload()
             }}
           >
-            <Button type="link" danger icon={<DeleteOutlined/>} size={'small'}>
-              Delete
-            </Button>
+            <Tooltip placement="top" title="删除">
+              <Button type="link" danger icon={<DeleteOutlined/>} size={'small'}>
+                Delete
+              </Button>
+            </Tooltip>
+
           </Popconfirm>
         </Access>,
       ]
     }
   ]
-  return <PageContainer>
+  return <PageContainer
+    header={{
+    title: '请求地址管理',
+    breadcrumb: {},
+  }}>
     <ProTable<API.CurrentAddress>
+      headerTitle={'地址列表'}
       actionRef={actionRef}
       rowKey="key"
       search={{
@@ -158,12 +183,13 @@ const Address: React.FC = () => {
             })
             handleModalOpen(true);
           }}
+          icon={<PlusOutlined/>}
         >
-          <PlusOutlined/> New
+          添加地址
         </Button>,
       ]}
       request={async (params, sort, filter) => {
-        console.log(params,sort, filter);
+        console.log(params, sort, filter);
         const msg = await getAddressS({...params});
         return {
           data: msg?.result?.data,
@@ -186,6 +212,8 @@ const Address: React.FC = () => {
       open={createModalOpen}
       onOpenChange={handleModalOpen}
       modalProps={{destroyOnClose: true}}
+      {...formItemLayout}
+      layout={"horizontal"}
       onFinish={async (value) => {
         try {
           console.log(value)
@@ -208,10 +236,44 @@ const Address: React.FC = () => {
         }
       }}
     >
-      <ProFormText width="md" name="id" hidden={true}/>
-      <ProFormText width="md" name="env" label={'环境'}/>
-      <ProFormText width="md" name="name" label={'昵称'}/>
-      <ProFormText width="md" name="gateway" label={'地址'}/>
+      <ProFormText name="id" hidden={true}/>
+      <ProFormSelect
+        label='环境'
+        name='env'
+        placeholder='请选择对应环境'
+        options={data.map(item => ({
+          label: item.name,
+          value: item.id
+        }))}
+        rules={[
+          {
+            required: true,
+            message: '请选择对应环境!',
+          },
+        ]}
+      />
+      <ProFormText
+        name='name'
+        label={'昵称'}
+        placeholder='请输入地址名称'
+        rules={[
+          {
+            required: true,
+            message: '请输入地址名称!',
+          },
+        ]}
+      />
+      <ProFormText
+        name='gateway'
+        label={'地址'}
+        placeholder='请输入服务地址'
+        rules={[
+          {
+            required: true,
+            message: '请输入服务地址!',
+          },
+        ]}
+      />
     </ModalForm>
   </PageContainer>
 }

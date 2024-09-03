@@ -8,6 +8,7 @@ import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
 import {useSetState} from "ahooks";
 import {deleteEnvironmentId, getEnvironments, postEnvironment, putEnvironment} from "@/services/admin/environment";
 import {Access} from '@/components/Boot/Access';
+import {formItemLayout} from "@/constan";
 
 type operateType = "add" | "see" | "up";
 type ModalType = {
@@ -114,9 +115,12 @@ const Environment: React.FC = () => {
               actionRef.current?.reload()
             }}
           >
-            <Button type="link" danger icon={<DeleteOutlined/>} size={'small'}>
-              Delete
-            </Button>
+            <Tooltip placement="top" title="删除">
+              <Button type="link" danger icon={<DeleteOutlined/>} size={'small'}>
+                Delete
+              </Button>
+            </Tooltip>
+
           </Popconfirm>
         </Access>,
       ]
@@ -124,8 +128,13 @@ const Environment: React.FC = () => {
   ]
 
 
-  return <PageContainer>
+  return <PageContainer
+    header={{
+      title: '环境配置',
+      breadcrumb: {},
+    }}>
     <ProTable<API.CurrentEnvironment>
+      headerTitle={'环境列表'}
       actionRef={actionRef}
       rowKey="key"
       search={{
@@ -142,12 +151,13 @@ const Environment: React.FC = () => {
             })
             handleModalOpen(true);
           }}
+          icon={<PlusOutlined/>}
         >
-          <PlusOutlined/> New
+          新增环境
         </Button>,
       ]}
       request={async (params, sort, filter) => {
-        console.log(params,sort, filter);
+        console.log(params, sort, filter);
         const msg = await getEnvironments({...params});
         return {
           data: msg?.result?.data,
@@ -193,9 +203,29 @@ const Environment: React.FC = () => {
         }
       }}
     >
-      <ProFormText width="md" name="id" hidden={true}/>
-      <ProFormText width="md" name="name" label={'环境昵称'}/>
-      <ProFormTextArea width="md" name="remarks" label={'环境描述'}/>
+      <ProFormText name="id" hidden={true}/>
+      <ProFormText
+        name="name"
+        label='环境昵称'
+        placeholder='请输入环境名'
+        rules={[
+          {
+            required: true,
+            message: '请输入环境名',
+          },
+        ]}
+      />
+      <ProFormTextArea
+        name="remarks"
+        label='环境描述'
+        placeholder='请输入描述信息'
+        rules={[
+          {
+            required: true,
+            message: '请输入描述信息',
+          },
+        ]}
+      />
     </ModalForm>
   </PageContainer>
 }

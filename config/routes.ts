@@ -17,6 +17,12 @@ export default [
     component: './Welcome'
   },
   {
+    path: '/project',
+    name: '项目管理',
+    icon: 'icon-Project',
+    component: './ApiTest/Project',
+  },
+  {
     path: '/account',
     icon: 'user',
     hideInMenu: true,

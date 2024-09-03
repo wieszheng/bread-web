@@ -117,7 +117,6 @@ declare namespace API {
     pageSize?: number;
     /** name */
     name?: string;
-    [p: string]: any;
   };
   type EnvironmentParams = {
     name?: string;
@@ -157,7 +156,7 @@ declare namespace API {
   }
   type deleteAddressIdParams = {
     /** address_id */
-    address_id: string;
+    address_id: number;
   };
   type AssociatedUser = {
     user_username: string;

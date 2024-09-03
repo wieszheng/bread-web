@@ -30,7 +30,6 @@ const UserList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<any>();
-  const {id} = useParams();
 
   const [form] = Form.useForm();
 
@@ -40,6 +39,7 @@ const UserList: React.FC = () => {
       title: 'id',
       dataIndex: 'id',
       hideInForm: true,
+      search: false,
       key: 'id',
     },
     {
@@ -154,11 +154,15 @@ const UserList: React.FC = () => {
 
 
   return (
-    <PageContainer title={indexTitle(id)}>
+    <PageContainer
+      header={{
+      title: '用户管理',
+      breadcrumb: {},
+    }}>
 
       <Modal
         title="编辑用户"
-        width={500}
+
         open={isModalOpen}
         onOk={async () => {
           const values = await form.getFieldsValue();
@@ -201,7 +205,7 @@ const UserList: React.FC = () => {
         actionRef={actionRef}
         rowKey="id"
         search={{
-          labelWidth: 120,
+          labelWidth: "auto",
         }}
         request={async (params, sort, filter) => {
           console.log(sort, filter);
