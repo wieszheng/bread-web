@@ -79,6 +79,11 @@ export default [
         name: '环境管理',
         component: './Config/Environment',
       },
+      {
+        path: '/config/address',
+        name: '网关配置',
+        component: './Config/Address',
+      },
     ],
   },
   {

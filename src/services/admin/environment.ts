@@ -8,7 +8,7 @@ export async function getEnvironments(
   options?: { [key: string]: any },
 ) {
   return request<any>('/config/environment/list', {
-    method: 'POST',
+    method: 'GET',
     params: {
       ...params,
     },
@@ -46,7 +46,7 @@ export async function putEnvironment(
   });
 }
 
-/** 修改环境 PUT /api/v1/config/environment */
+/** 删除环境 DELETE /api/v1/config/environment */
 export async function deleteEnvironmentId(
   params: API.deleteEnvironmentIdParams,
   options?: { [key: string]: any },

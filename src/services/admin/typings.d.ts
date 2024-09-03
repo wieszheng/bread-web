@@ -27,7 +27,6 @@ declare namespace API {
     phone?: string;
   };
 
-
   type CurrentEnvironment = {
     /** id */
     id: string;
@@ -105,6 +104,11 @@ declare namespace API {
     /** name */
     name?: string;
   };
+  type deleteUsersIdParams = {
+    /** id */
+    id: string;
+  };
+
 
   type getEnvironmentsParams = {
     /** current */
@@ -113,13 +117,77 @@ declare namespace API {
     pageSize?: number;
     /** name */
     name?: string;
+    [p: string]: any;
   };
+  type EnvironmentParams = {
+    name?: string;
+    remarks?: string;
+  }
+  type UpdateEnvironmentParams = {
+    id?: number;
+    name?: string;
+    remarks?: string;
+  }
+  type deleteEnvironmentIdParams = {
+    /** env_id */
+    env_id: string;
+  }
 
-  type deleteUsersIdParams = {
+
+  type getAddressSParams = {
+    /** current */
+    current?: number;
+    /** pageSize */
+    pageSize?: number;
+    /** name */
+    name?: string;
+    /** env */
+    env?: string;
+    [p: string]: any;
+  };
+  type AddressParams = {
+    env?: string;
+    name?: string;
+  }
+  type UpdateAddressParams = {
+    id?: number;
+    env?: string;
+    name?: string;
+    gateway?: string;
+  }
+  type deleteAddressIdParams = {
+    /** address_id */
+    address_id: string;
+  };
+  type AssociatedUser = {
+    user_username: string;
+    user_nickname: string;
+    user_email: string | null;
+    user_phone: string | null;
+    user_avatar: string | null;
+  }
+  type CurrentAddress = {
     /** id */
-    id: string;
-  };
+    id: number;
+    /** env */
+    env: number;
+    /** name */
+    name: string;
+    /** gateway */
+    gateway: string;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+    is_deleted: boolean;
+    created_by: number;
+    updated_by: string | null;
+    user_username: string;
+    user_nickname: string;
+    user_email: string | null;
+    user_phone: string | null;
+    user_avatar: string | null;
 
+  };
 
   type RuleListItem = {
     key?: number;
@@ -149,20 +217,7 @@ declare namespace API {
     password?: string;
   };
 
-  type EnvironmentParams = {
-    name?: string;
-    remarks?: string;
-  }
-  type UpdateEnvironmentParams = {
-    id?: number;
-    name?: string;
-    remarks?: string;
-  }
-
-  type deleteEnvironmentIdParams = {
-    /** env_id */
-    env_id: string;
-  };
+;
   type NoticeIconList = {
     data?: NoticeIconItem[];
     /** 列表的内容总数 */

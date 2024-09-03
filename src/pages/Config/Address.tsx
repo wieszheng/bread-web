@@ -1,20 +1,26 @@
-import React, {useRef, useState} from "react";
+import React, {memo, useRef, useState} from 'react'
 import {
-  ActionType, ModalForm,
-  PageContainer, ProTable, ProFormText, ProFormTextArea, type ProColumns
-} from '@ant-design/pro-components'
-import {Button, Form, Popconfirm, Space, Tooltip,} from "antd";
-import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
+  ActionType,
+  ModalForm,
+  PageContainer,
+  ProColumns,
+  ProFormText,
+  ProFormTextArea,
+  ProTable
+} from "@ant-design/pro-components";
+import {Button, Form, Popconfirm, Space, Tag, Tooltip} from "antd";
+import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import {useSetState} from "ahooks";
-import {deleteEnvironmentId, getEnvironments, postEnvironment, putEnvironment} from "@/services/admin/environment";
-import {Access} from '@/components/Boot/Access';
+import {deleteAddressId, getAddressS, postAddress, putAddress} from "@/services/admin/address";
+import {Access} from "@/components/Boot/Access";
+import {deleteEnvironmentId, postEnvironment, putEnvironment} from "@/services/admin/environment";
 
 type operateType = "add" | "see" | "up";
 type ModalType = {
   operateType: operateType;
-  nowData: API.CurrentEnvironment | null;
+  nowData: API.CurrentAddress | null;
 };
-const Environment: React.FC = () => {
+const Address: React.FC = () => {
   const [form] = Form.useForm<{ name: string; company: string }>();
   const [createModalOpen, handleModalOpen] = useState<boolean>(false);
   const [modal, setModal] = useSetState<ModalType>({
@@ -23,7 +29,7 @@ const Environment: React.FC = () => {
   });
   const actionRef = useRef<ActionType>();
 
-  const columns: ProColumns<API.CurrentEnvironment>[] = [
+  const columns:ProColumns<API.CurrentAddress>[] = [
     {
       title: 'ID',
       width: '5%',
@@ -32,14 +38,26 @@ const Environment: React.FC = () => {
       search: false,
     },
     {
-      title: '环境名称',
+      title: '环境',
       width: '8%',
-      dataIndex: 'name',
+      key: 'env',
+      dataIndex: 'env',
+      render: env => <Tag>{env}</Tag>,
     },
     {
-      title: '备注',
-      dataIndex: 'remarks',
+      title: '名称',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: '地址',
+      key: 'gateway',
       search: false,
+      tooltip: '地址一般是服务的基础地址，比如https://api.baidu.com, 用例中的地址简写即可',
+      dataIndex: 'gateway',
+      copyable: true,
+      ellipsis: true,
+      render: url => <a href={url as string}>{url}</a>,
     },
     {
       title: '创建人',
@@ -110,7 +128,7 @@ const Environment: React.FC = () => {
             okText={'好的'}
             cancelText={'取消'}
             onConfirm={async () => {
-              await deleteEnvironmentId({env_id: record.id});
+              await deleteAddressId({address_id: record.id});
               actionRef.current?.reload()
             }}
           >
@@ -122,10 +140,8 @@ const Environment: React.FC = () => {
       ]
     }
   ]
-
-
   return <PageContainer>
-    <ProTable<API.CurrentEnvironment>
+    <ProTable<API.CurrentAddress>
       actionRef={actionRef}
       rowKey="key"
       search={{
@@ -148,7 +164,7 @@ const Environment: React.FC = () => {
       ]}
       request={async (params, sort, filter) => {
         console.log(params,sort, filter);
-        const msg = await getEnvironments({...params});
+        const msg = await getAddressS({...params});
         return {
           data: msg?.result?.data,
           success: msg?.success,
@@ -162,7 +178,6 @@ const Environment: React.FC = () => {
         hideOnSinglePage: true
       }}
     >
-
     </ProTable>
     <ModalForm
       title={{add: "新增", up: "修改", see: "查看信息"}[modal.operateType]}
@@ -176,11 +191,11 @@ const Environment: React.FC = () => {
           console.log(value)
           if (modal.operateType === "add") {
             // 新增
-            await postEnvironment(value);
+            await postAddress(value);
           }
           if (modal.operateType === "up") {
             // 修改
-            await putEnvironment(value);
+            await putAddress(value);
           }
 
 
@@ -194,9 +209,11 @@ const Environment: React.FC = () => {
       }}
     >
       <ProFormText width="md" name="id" hidden={true}/>
-      <ProFormText width="md" name="name" label={'环境昵称'}/>
-      <ProFormTextArea width="md" name="remarks" label={'环境描述'}/>
+      <ProFormText width="md" name="env" label={'环境'}/>
+      <ProFormText width="md" name="name" label={'昵称'}/>
+      <ProFormText width="md" name="gateway" label={'地址'}/>
     </ModalForm>
   </PageContainer>
 }
-export default Environment
+
+export default memo(Address)
