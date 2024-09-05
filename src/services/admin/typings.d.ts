@@ -142,7 +142,6 @@ declare namespace API {
     name?: string;
     /** env */
     env?: string;
-    [p: string]: any;
   };
   type AddressParams = {
     env?: string;
@@ -188,6 +187,12 @@ declare namespace API {
 
   };
 
+  type getProjectsParams = {
+    /** current */
+    current?: number;
+    /** pageSize */
+    pageSize?: number;
+  }
   type RuleListItem = {
     key?: number;
     disabled?: boolean;
