@@ -7,7 +7,7 @@ export async function getProjects(
   params: API.getEnvironmentsParams,
   options?: { [key: string]: any },
 ) {
-  return request<{any}>('/project/list', {
+  return request<any>('/project/list', {
     method: 'GET',
     params: {
       ...params,
