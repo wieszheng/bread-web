@@ -1,40 +1,159 @@
-import React, {useRef, useState} from "react";
-import {ActionType, PageContainer} from "@ant-design/pro-components";
-import {Avatar, Button, Tag, Tooltip} from "antd";
+import React, {useEffect, useRef, useState} from "react";
 import {
-  MessageOutlined,
-
+  ActionType,
+  ModalForm,
+  PageContainer,
+  ProFormSelect, ProFormSwitch,
+  ProFormText,
+  ProFormTextArea
+} from "@ant-design/pro-components";
+import {Avatar, Button, Dropdown, Form, message, Tag, Tooltip} from "antd";
+import {
+  EllipsisOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
-
-import {getProjects} from "@/services/admin/project";
-
+import {deleteProject, getProjects, postProject} from "@/services/admin/project";
 import {history} from '@umijs/max';
 import ProList from "@ant-design/pro-list/lib";
+import {formItemLayout} from "@/constan";
+import {useSetState} from "ahooks";
+import {getUsers} from "@/services/admin/user";
 
-const IconText = ({icon, text}: { icon: any; text: string }) => (
-  <span>
-    {React.createElement(icon, {style: {marginInlineEnd: 8}})}
-    {text}
-  </span>
-);
+
+type operateType = "add" | "see" | "up";
+type ModalType = {
+  operateType: operateType;
+  nowData: API.CurrentAddress | null;
+};
+
 const Project: React.FC = () => {
   const [activeKey, setActiveKey] = useState<React.Key | undefined>('tab1');
-  const action = useRef<ActionType>();
+  const [form] = Form.useForm<{ name: string; company: string }>();
+  const [createModalOpen, handleModalOpen] = useState<boolean>(false);
+  const [modal, setModal] = useSetState<ModalType>({
+    operateType: "add",
+    nowData: null
+  });
+  const actionRef = useRef<ActionType>();
+  const [data, setData] = useState<API.CurrentUser[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const {result} = await getUsers({current: 1, pageSize: 99});
+        setData(result.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+
+      }
+    };
+    fetchData();
+  }, []);
+
   return <PageContainer
     header={{
       title: '项目管理',
       breadcrumb: {},
     }}
   >
+    <ModalForm
+      title={{add: "新增项目", up: "修改项目", see: "查看信息"}[modal.operateType]}
+      width={550}
+      form={form}
+      open={createModalOpen}
+      onOpenChange={handleModalOpen}
+      modalProps={{destroyOnClose: true}}
+      {...formItemLayout}
+      layout={"horizontal"}
+      onFinish={async (value) => {
+        try {
+          console.log(value)
+          if (modal.operateType === "add") {
+            // 新增
+            const res = await postProject(value);
+            if (res?.success) {
+              message.success(res?.message);
+            }
+          }
+          if (modal.operateType === "up") {
+            // 修改
+
+          }
+
+
+        } catch {
+          // 未通过校验
+        }
+        handleModalOpen(false);
+        if (actionRef.current) {
+          actionRef?.current?.reload();
+        }
+      }}
+    >
+      <ProFormText name="id" hidden={true}/>
+      <ProFormText
+        name='name'
+        label='昵称'
+        placeholder='请输入项目名称'
+        rules={[
+          {
+            required: true,
+            message: '请输入项目名称!',
+          },
+        ]}
+      />
+      <ProFormText
+        name='app'
+        label='服务名'
+        placeholder='请输入项目对应服务名称'
+        rules={[
+          {
+            required: true,
+            message: '请输入项目对应服务名称!',
+          },
+        ]}
+      />
+      <ProFormSelect
+        label='负责人'
+        name='owner'
+        placeholder='请选择负责人'
+        options={data.map(item => ({
+          label: item.nickname,
+          value: item.id
+        }))}
+        rules={[
+          {
+            required: true,
+            message: '请选择负责人!',
+          },
+        ]}
+      />
+      <ProFormTextArea
+        name='description'
+        label='项目描述'
+        placeholder='请输入项目描述'
+        rules={[
+          {
+            required: true,
+            message: '请输入项目描述!',
+          },
+        ]}
+      />
+      <ProFormSwitch
+        name='private'
+        label='是否私有'
+        rules={[
+          {
+            required: true,
+            message: '请选择项目是否私有!',
+          },
+        ]}
+      />
+    </ModalForm>
     <ProList<any>
       size={'large'}
-      // toolbar={() => {
-      //   return [
-
-      //   ];
-      // }}
-      actionRef={action}
+      actionRef={actionRef}
       toolbar={{
         menu: {
           activeKey,
@@ -67,7 +186,7 @@ const Project: React.FC = () => {
         },
         actions: [
           <Button key="3" type="primary" onClick={() => {
-            console.log('新建项目')
+            handleModalOpen(true);
           }}
           >
             创建项目
@@ -79,11 +198,11 @@ const Project: React.FC = () => {
       }}
       ghost={true}
       pagination={{
-        defaultPageSize: 12,
-        showSizeChanger: false,
+        pageSize: 12,
+        size: 'default',
+        hideOnSinglePage: true
       }}
       showActions="hover"
-      // rowSelection={{}}
       rowKey="name"
       grid={{gutter: 14, column: 4}}
       onItem={(record: any) => {
@@ -142,24 +261,58 @@ const Project: React.FC = () => {
           },
         },
         actions: {
-          render: () => [
-            <IconText
-              icon={MessageOutlined}
-              text="2"
-              key="list-vertical-message"
-            />,
-          ],
+          render: (_, row) => {
+            return <Dropdown
+              menu={{
+                onClick:async (e) => {
+                  if (e.key === '1'){
+                    message.info('申请权限');
+                    await deleteProject(row.id)
+                  }else if (e.key === '2'){
+                    await deleteProject(row.id)
+                    message.info('删除项目');
+                  }
+                  actionRef?.current?.reload();
+
+                },
+                items: [
+                  {
+                    label: '申请权限',
+                    key: '1',
+                  },
+                  {
+                    label: '删除项目',
+                    key: '2',
+                  },
+                ],
+              }}
+            >
+              <EllipsisOutlined
+                style={{fontSize: 25, color: 'rgba(0,0,0,0.5)',marginInlineEnd: 10}}
+
+              />
+            </Dropdown>
+          }
         },
       }}
       headerTitle="项目列表"
       request={async (params, sort, filter) => {
         console.log(params, sort, filter);
-        const msg = await getProjects({...params});
-        return {
-          data: msg?.result?.data,
-          success: msg?.success,
-          total: msg?.result?.total_count
-        };
+        const {result, success} = await getProjects({...params});
+        if (success) {
+          return {
+            data: result?.data,
+            success: success,
+            total: result?.total_count
+          };
+        } else {
+          return {
+            data: [],
+            success: false,
+            total: 0,
+          };
+        }
+
       }}
     />
 

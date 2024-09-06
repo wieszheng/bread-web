@@ -1,7 +1,7 @@
 ﻿import type {RequestOptions} from '@@/plugin-request/request';
 import type {RequestConfig} from '@umijs/max';
 import {message, notification} from 'antd';
-import {BACKEND_HOST_LOCAL} from "@/constan";
+import {BACKEND_HOST_LOCAL, BACKEND_HOST_PROD} from "@/constan";
 
 // 与后端约定的响应数据格式
 interface ResponseStructure {
@@ -17,7 +17,7 @@ interface ResponseStructure {
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const errorConfig: RequestConfig = {
-  baseURL: BACKEND_HOST_LOCAL,
+  baseURL: BACKEND_HOST_PROD,
 
   // 错误处理： umi@3 的错误处理方案。
   errorConfig: {

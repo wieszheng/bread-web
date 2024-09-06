@@ -21,7 +21,7 @@ export async function postAddress(
   body: API.AddressParams,
   options?: { [key: string]: any },
 ) {
-  return request<any>('/config/address', {
+  return request<API.CommonResponse>('/config/address', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

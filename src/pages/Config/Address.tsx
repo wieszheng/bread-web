@@ -8,7 +8,7 @@ import {
   ProTable,
   ProFormSelect
 } from "@ant-design/pro-components";
-import {Button, Form, Popconfirm, Space, Tag, Tooltip} from "antd";
+import {Button, Form, message, Popconfirm, Space, Tag, Tooltip} from "antd";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import {useSetState} from "ahooks";
 import {deleteAddressId, getAddressS, postAddress, putAddress} from "@/services/admin/address";
@@ -219,11 +219,17 @@ const Address: React.FC = () => {
           console.log(value)
           if (modal.operateType === "add") {
             // 新增
-            await postAddress(value);
+            const res = await postAddress(value);
+            if (res?.success) {
+              message.success(res?.message);
+            }
           }
           if (modal.operateType === "up") {
             // 修改
-            await putAddress(value);
+            const res = await putAddress(value);
+            if (res?.success) {
+              message.success(res?.message);
+            }
           }
 
 

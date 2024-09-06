@@ -193,6 +193,16 @@ declare namespace API {
     /** pageSize */
     pageSize?: number;
   }
+
+  type ProjectsParams = {
+    name?: string;
+    app?: string;
+    owner?: number;
+    private?: boolean;
+    description?: string
+    dingtalk_url?: string
+  }
+
   type RuleListItem = {
     key?: number;
     disabled?: boolean;
@@ -221,7 +231,7 @@ declare namespace API {
     password?: string;
   };
 
-;
+  ;
   type NoticeIconList = {
     data?: NoticeIconItem[];
     /** 列表的内容总数 */
