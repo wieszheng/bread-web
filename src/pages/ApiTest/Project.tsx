@@ -5,35 +5,24 @@ import {
   PageContainer,
   ProFormSelect, ProFormSwitch,
   ProFormText,
-  ProFormTextArea
+  ProFormTextArea,
+  ProList
 } from "@ant-design/pro-components";
 import {Avatar, Button, Dropdown, Form, message, Tag, Tooltip} from "antd";
 import {
   EllipsisOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
-import {deleteProject, getProjects, postProject} from "@/services/admin/project";
+import {deleteProjectId, getProjects, postProject} from "@/services/admin/project";
 import {history} from '@umijs/max';
-import ProList from "@ant-design/pro-list/lib";
-import {formItemLayout} from "@/constan";
-import {useSetState} from "ahooks";
+import {formItemLayout, PROJECT_AVATAR_URL, USER_AVATAR_URL} from "@/constan";
 import {getUsers} from "@/services/admin/user";
 
 
-type operateType = "add" | "see" | "up";
-type ModalType = {
-  operateType: operateType;
-  nowData: API.CurrentAddress | null;
-};
-
 const Project: React.FC = () => {
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>('tab1');
+
   const [form] = Form.useForm<{ name: string; company: string }>();
   const [createModalOpen, handleModalOpen] = useState<boolean>(false);
-  const [modal, setModal] = useSetState<ModalType>({
-    operateType: "add",
-    nowData: null
-  });
   const actionRef = useRef<ActionType>();
   const [data, setData] = useState<API.CurrentUser[]>([]);
 
@@ -58,7 +47,7 @@ const Project: React.FC = () => {
     }}
   >
     <ModalForm
-      title={{add: "新增项目", up: "修改项目", see: "查看信息"}[modal.operateType]}
+      title={'新增项目'}
       width={550}
       form={form}
       open={createModalOpen}
@@ -68,20 +57,11 @@ const Project: React.FC = () => {
       layout={"horizontal"}
       onFinish={async (value) => {
         try {
-          console.log(value)
-          if (modal.operateType === "add") {
-            // 新增
-            const res = await postProject(value);
-            if (res?.success) {
-              message.success(res?.message);
-            }
+          // 新增
+          const res = await postProject(value);
+          if (res?.success) {
+            message.success(res?.message);
           }
-          if (modal.operateType === "up") {
-            // 修改
-
-          }
-
-
         } catch {
           // 未通过校验
         }
@@ -119,7 +99,7 @@ const Project: React.FC = () => {
         name='owner'
         placeholder='请选择负责人'
         options={data.map(item => ({
-          label: item.nickname,
+          label: item.username,
           value: item.id
         }))}
         rules={[
@@ -152,42 +132,15 @@ const Project: React.FC = () => {
       />
     </ModalForm>
     <ProList<any>
-      size={'large'}
       actionRef={actionRef}
-      toolbar={{
-        menu: {
-          activeKey,
+      search={{
+        labelWidth: 'auto',
+        optionRender: () => [
 
-          items: [
-            {
-              key: 'tab1',
-              label: (
-                <span>全部项目</span>
-              ),
-            },
-            {
-              key: 'tab2',
-              label: (
-                <span>
-                  我加入的项目
-                </span>
-              ),
-            },
-          ],
-          onChange(key) {
-            setActiveKey(key);
-          },
-        },
-        search: {
-          onSearch: (value: string) => {
-            alert(value);
-          },
-          placeholder: "请输入项目名称",
-        },
-        actions: [
           <Button key="3" type="primary" onClick={() => {
             handleModalOpen(true);
           }}
+                  style={{marginRight: 10}}
           >
             创建项目
             <Tooltip title="只有超级管理员可以创建项目">
@@ -198,7 +151,7 @@ const Project: React.FC = () => {
       }}
       ghost={true}
       pagination={{
-        pageSize: 12,
+        pageSize: 8,
         size: 'default',
         hideOnSinglePage: true
       }}
@@ -208,10 +161,10 @@ const Project: React.FC = () => {
       onItem={(record: any) => {
         return {
           onMouseEnter: () => {
-            console.log(record);
+            // console.log(record);
           },
           onClick: () => {
-            console.log(record);
+            // console.log(record);
             history.push(`/project/${record.id}`);
           },
         };
@@ -220,23 +173,31 @@ const Project: React.FC = () => {
         avatar: {
           dataIndex: 'avatar',
           render: (_, row) => {
-            return <Avatar shape={'square'} src={row.avatar}/>
+            return <Avatar shape={'square'} src={row.avatar || PROJECT_AVATAR_URL}/>
           },
           search: false,
         },
         title: {
           dataIndex: 'name',
+          title: '项目名称',
+          search: {
+            transform: (value) => {
+              return {name: value};
+            }
+          },
           render: (_, row) => {
             return <h3 style={{color: '#000', marginLeft: 8}}>{row.name}</h3>
           },
         },
         subTitle: {
+          search: false,
           render: (_, row) => {
             return <Tag color="blue">{row.user_nickname}</Tag>
           },
         },
-        type: {},
+
         content: {
+          search: false,
           render: (_, row) => {
             return <div style={{flex: 1,}}>
               <div
@@ -246,12 +207,12 @@ const Project: React.FC = () => {
               >
                 <div
                   style={{
-                    marginBottom: 4,
+
                     fontWeight: 'bold'
                   }}>
                   {'负责人：'}
                   <Tooltip placement="right" title={row.user_username}>
-                    <Avatar style={{marginRight: 8}} src={row.user_avatar}/>
+                    <Avatar style={{marginRight: 8, marginBottom: 6}} src={row.user_avatar || USER_AVATAR_URL}/>
                   </Tooltip>
                 </div>
                 <h5>说明： {row.description || '无'}</h5>
@@ -264,13 +225,14 @@ const Project: React.FC = () => {
           render: (_, row) => {
             return <Dropdown
               menu={{
-                onClick:async (e) => {
-                  if (e.key === '1'){
+                onClick: async (e) => {
+                  if (e.key === '1') {
                     message.info('申请权限');
-                    await deleteProject(row.id)
-                  }else if (e.key === '2'){
-                    await deleteProject(row.id)
-                    message.info('删除项目');
+                  } else if (e.key === '2') {
+                    const res = await deleteProjectId({project_id: row.id})
+                    if (res?.success) {
+                      message.success(res?.message);
+                    }
                   }
                   actionRef?.current?.reload();
 
@@ -288,7 +250,7 @@ const Project: React.FC = () => {
               }}
             >
               <EllipsisOutlined
-                style={{fontSize: 25, color: 'rgba(0,0,0,0.5)',marginInlineEnd: 10}}
+                style={{fontSize: 25, color: 'rgba(0,0,0,0.5)', marginInlineEnd: 10}}
 
               />
             </Dropdown>

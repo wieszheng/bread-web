@@ -157,6 +157,42 @@ declare namespace API {
     /** address_id */
     address_id: number;
   };
+
+  type deleteProjectIdParams = {
+    /** project_id */
+    project_id: number;
+  };
+
+  type deleteProjectRoleIdParams = {
+    /** role_id  */
+    role_id: number;
+  };
+
+  type putProjectRoleParams = {
+    /** id  */
+    id?: number;
+    /** user_id  */
+    user_id: number;
+    /** project_role  */
+    project_role: number;
+    /** project_id  */
+    project_id: number;
+  }
+
+  type ProjectRoleParams = {
+    /** user_id  */
+    user_id?: number;
+    /** project_role  */
+    project_role?: number;
+    /** project_id  */
+    project_id: number;
+  }
+
+  type getProjectIdParams = {
+    /** project_id */
+    project_id: number;
+  };
+
   type AssociatedUser = {
     user_username: string;
     user_nickname: string;
@@ -194,7 +230,17 @@ declare namespace API {
     pageSize?: number;
   }
 
-  type ProjectsParams = {
+  type ProjectParams = {
+    name?: string;
+    app?: string;
+    owner?: number;
+    private?: boolean;
+    description?: string
+    dingtalk_url?: string
+  }
+
+  type putProjectsParams = {
+    id?: number;
     name?: string;
     app?: string;
     owner?: number;

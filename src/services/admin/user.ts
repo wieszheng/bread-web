@@ -63,7 +63,7 @@ export async function putUserRole(
 }
 
 /** 更新用户信息 更新用户
- :return: PUT /api/v1/system/user/${param0} */
+ :return: PUT /api/v1/system/user} */
 export async function putUserUserInfo(
   body: API.UpdateUserParam,
   options?: { [key: string]: any },

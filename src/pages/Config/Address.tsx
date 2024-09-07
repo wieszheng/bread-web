@@ -139,8 +139,8 @@ const Address: React.FC = () => {
         </Access>,
         <Access key={'delete'}>
           <Popconfirm
-            key="delete"
-            title={'删除'}
+            key='delete'
+            title='删除'
             description={'您确定要删除此记录吗?'}
             okText={'好的'}
             cancelText={'取消'}

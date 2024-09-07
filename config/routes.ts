@@ -23,6 +23,12 @@ export default [
     component: './ApiTest/Project',
   },
   {
+    path: '/project/:id',
+    hideInMenu: true,
+    name: '项目详情',
+    component: './ApiTest/ProjectDetail',
+  },
+  {
     path: '/account',
     icon: 'user',
     hideInMenu: true,

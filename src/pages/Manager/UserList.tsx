@@ -203,7 +203,7 @@ const UserList: React.FC = () => {
       <ProTable<API.CurrentUser>
         headerTitle={'用户列表'}
         actionRef={actionRef}
-        rowKey="id"
+        rowKey='id'
         search={{
           labelWidth: "auto",
         }}
