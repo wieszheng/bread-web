@@ -78,6 +78,14 @@ git push origin main
 
 [`MIT`](LICENSE)
 
+#### 📚 演示图
+![image](/images/1725731568091.jpg)
+![image](/images/1725731610801.jpg)
+![image](/images/1725731624752.jpg)
+![image](/images/1725731638512.jpg)
+![image](/images/1725731673418.jpg)
+![image](/images/1725731685801.jpg)
+![image](/images/1725731711450.jpg)
 #### 📞 作者介绍
 
     大家好，我是 wieszheng，一个乐于分享，喜欢钻研技术的测试开发工程师。
@@ -87,11 +95,11 @@ git push origin main
 #### ❤️ 喜欢我？
 
 <p align="center">
-<a href="https://star-history.com/#wieszheng/bread">
+<a href="https://star-history.com/#wieszheng/bread-web">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=wieszheng/bread&type=Date&title=50&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=wieszheng/bread&type=Date&title=50" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=wieszheng/bread&type=Date" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=wieszheng/bread-web&type=Date&title=50&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=wieszheng/bread-web&type=Date&title=50" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=wieszheng/bread-web&type=Date" />
   </picture>
 </a>
 </p>
