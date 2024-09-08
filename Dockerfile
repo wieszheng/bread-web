@@ -3,7 +3,7 @@ FROM circleci/node:latest-browsers as builder
 WORKDIR /usr/src/app/
 USER root
 COPY package.json ./
-RUN yarn
+RUN yarn install
 
 COPY ./ ./
 
