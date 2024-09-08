@@ -67,11 +67,11 @@ export default [
     name: '后台管理',
     authority: ['superAdmin'],
     routes: [
-      // {
-      //   path: '/system/configure',
-      //   name: '系统设置',
-      //   component: './Config/SystemConfig',
-      // },
+      {
+        path: '/system/configure',
+        name: '系统设置',
+        component: './Config/SystemConfig',
+      },
       {
         path: '/system/user',
         name: '用户管理',
@@ -95,6 +95,26 @@ export default [
         path: '/config/address',
         name: '网关配置',
         component: './Config/Address',
+      },
+      {
+        path: '/config/config',
+        name: '全局变量',
+        component: './Config/GConfig',
+      },
+      {
+        path: '/config/database',
+        name: '数据库配置',
+        component: './Config/Database',
+      },
+      {
+        path: '/config/redis',
+        name: 'Redis配置',
+        component: './Config/Redis',
+      },
+      {
+        path: '/config/minio',
+        name: 'minio文件',
+        component: './Config/Minio',
       },
     ],
   },

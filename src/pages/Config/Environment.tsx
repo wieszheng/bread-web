@@ -8,7 +8,7 @@ import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
 import {useSetState} from "ahooks";
 import {deleteEnvironmentId, getEnvironments, postEnvironment, putEnvironment} from "@/services/admin/environment";
 import {Access} from '@/components/Boot/Access';
-import {formItemLayout} from "@/constan";
+
 
 type operateType = "add" | "see" | "up";
 type ModalType = {
@@ -144,7 +144,7 @@ const Environment: React.FC = () => {
         // 新建按钮
         <Button
           type="primary"
-          key="primary"
+          key="id"
           onClick={() => {
             setModal({
               operateType: 'add',

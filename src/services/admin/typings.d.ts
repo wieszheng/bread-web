@@ -249,6 +249,39 @@ declare namespace API {
     dingtalk_url?: string
   }
 
+  type getGlobalConfigsParams = {
+    /** current */
+    current?: number;
+    /** pageSize */
+    pageSize?: number;
+    /** key */
+    key?: string;
+    /** env */
+    env?: string;
+  }
+
+  type GlobalConfigParams = {
+    key?: string;
+    value?: string;
+    env?: number;
+    key_type?: number;
+    enable?: boolean
+  }
+
+  type putGlobalConfigParams = {
+    id?: number;
+    key?: string;
+    value?: string;
+    env?: number;
+    key_type?: number;
+    enable?: boolean
+  }
+
+  type deleteGlobalConfigIdParams = {
+    /** global_id  */
+    global_id: number;
+  };
+
   type RuleListItem = {
     key?: number;
     disabled?: boolean;

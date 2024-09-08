@@ -1,14 +1,19 @@
-import {Footer, Question, AvatarDropdown, AvatarName} from '@/components';
-import {LinkOutlined} from '@ant-design/icons';
+import {Footer, AvatarDropdown, AvatarName} from '@/components';
 import type {Settings as LayoutSettings} from '@ant-design/pro-components';
-import {SettingDrawer} from '@ant-design/pro-components';
+import {SettingDrawer, PageLoading} from '@ant-design/pro-components';
+import {ConfigProvider, Empty, Spin} from "antd";
 import type {RunTimeLayoutConfig} from '@umijs/max';
-import {history, Link} from '@umijs/max';
+import {history} from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import {errorConfig} from './requestErrorConfig';
 import {currentUser as queryCurrentUser} from '@/services/admin/user';
+import {Loading} from '@icon-park/react';
 import React from 'react';
+import NoTableData from "@/assets/NoSearch.svg";
+
+
 const loginPath = '/user/login';
+Spin.setDefaultIndicator(<Loading spin={true} theme="outline" size="36" fill="#4a90e2" strokeLinecap="butt"/>)
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -50,7 +55,7 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => {
   return {
-    actionsRender: () => [<Question key="doc"/>],
+    siderWidth: 216,
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName/>,
@@ -90,38 +95,32 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
       },
     ],
     // links: isDev ?
-    links: [
-      <Link key="openapi" to="/" target="_blank">
-        <a href={"/"} target={"_blank"} rel="noreferrer">
-          <LinkOutlined/>
-          <span>项目文档</span>
-        </a>
-      </Link>,
-    ],
+    links: [],
     //  : [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
     childrenRender: (children) => {
-      // if (initialState?.loading) return <PageLoading />;
+      if (initialState?.loading) return <PageLoading/>;
       return (
-        <>
+        <ConfigProvider
+          renderEmpty={() => <Empty image={NoTableData} imageStyle={{height: 160}}
+                                    description="暂无数据"/>}>
           {children}
-          {/*{isDev && (*/}
-          {/*  <SettingDrawer*/}
-          {/*    disableUrlParams*/}
-          {/*    enableDarkTheme*/}
-          {/*    settings={initialState?.settings}*/}
-          {/*    onSettingChange={(settings) => {*/}
-          {/*      setInitialState((preInitialState) => ({*/}
-          {/*        ...preInitialState,*/}
-          {/*        settings,*/}
-          {/*      }));*/}
-          {/*    }}*/}
-          {/*  />*/}
-          {/*)}*/}
-        </>
+          <SettingDrawer
+            disableUrlParams
+            enableDarkTheme
+            settings={initialState?.settings}
+            onSettingChange={(settings) => {
+              setInitialState((preInitialState) => ({
+                ...preInitialState,
+                settings,
+              }));
+            }}
+          />
+
+        </ConfigProvider>
       );
     },
     ...initialState?.settings,
