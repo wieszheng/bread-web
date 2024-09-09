@@ -1,12 +1,11 @@
-FROM circleci/node:latest-browsers as builder
+FROM node:18.16.0-slim as builder
 
 WORKDIR /usr/src/app/
 USER root
 COPY package.json ./
-RUN yarn install
+RUN npm install --only=production
 
-COPY ./ ./
-
+COPY . .
 RUN npm run build
 
 
@@ -21,3 +20,5 @@ COPY --from=builder /usr/src/app/dist  /usr/share/nginx/html/
 
 EXPOSE 80
 EXPOSE 443
+
+CMD ["nginx", "-g", "daemon off;"]
