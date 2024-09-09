@@ -1,5 +1,5 @@
 # --------- package ---------
-FROM node:18 AS builder
+FROM node:18.16.1-slim AS builder
 
 WORKDIR /app
 COPY package*.json ./
