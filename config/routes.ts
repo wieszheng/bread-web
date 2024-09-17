@@ -29,6 +29,40 @@ export default [
     component: './ApiTest/ProjectDetail',
   },
   {
+    path: '/apiTest',
+    name: '接口测试',
+    icon: 'api',
+    routes: [
+      {
+        path: '/apiTest/testcase',
+        name: '接口用例',
+        component: './ApiTest/TestCaseDirectory',
+      },
+      // {
+      //   path: '/apiTest/record',
+      //   name: '用例录制',
+      //   component: './ApiTest/TestCaseRecorder',
+      // },
+      // {
+      //   path: '/apiTest/testcase/:directory/add',
+      //   name: '添加用例',
+      //   hideInMenu: true,
+      //   component: './ApiTest/TestCaseComponent',
+      // },
+      // {
+      //   path: '/apiTest/testcase/:directory/:case_id',
+      //   name: '编辑用例',
+      //   hideInMenu: true,
+      //   component: './ApiTest/TestCaseComponent',
+      // },
+      // {
+      //   path: '/apiTest/testplan',
+      //   name: '测试计划',
+      //   component: './ApiTest/TestPlan',
+      // },
+    ],
+  },
+  {
     path: '/account',
     icon: 'user',
     hideInMenu: true,

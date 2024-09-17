@@ -1,21 +1,20 @@
 import {Footer} from '@/components';
 import {login} from '@/services/admin/user';
 import {
-  AlipayCircleOutlined,
+  AlipayOutlined,
   LockOutlined,
-  TaobaoCircleOutlined,
+  TaobaoOutlined,
   UserOutlined,
-  WeiboCircleOutlined,
+  WeiboOutlined,
 } from '@ant-design/icons';
 import {
-  LoginForm,
+  LoginFormPage,
   ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
 import {history, useModel, Helmet} from '@umijs/max';
-import {message} from 'antd';
-import Settings from '../../../../config/defaultSettings';
-import React from 'react';
+import {message, Divider, Space} from 'antd';
+import React, {CSSProperties} from 'react';
 import {flushSync} from 'react-dom';
 import {createStyles} from 'antd-style';
 
@@ -54,16 +53,14 @@ const useStyles = createStyles(({token}) => {
     },
   };
 });
-const ActionIcons = () => {
-  const {styles} = useStyles();
-  return (
-    <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action}/>
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action}/>
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action}/>
-    </>
-  );
+
+const iconStyles: CSSProperties = {
+  color: 'rgba(0, 0, 0, 0.2)',
+  fontSize: '18px',
+  verticalAlign: 'middle',
+  cursor: 'pointer',
 };
+
 
 const Login: React.FC = () => {
 
@@ -89,7 +86,7 @@ const Login: React.FC = () => {
       }
       //set token to localstorage
       localStorage.setItem('access_token', data?.result?.access_token || '');
-      localStorage.setItem('token_type', data?.result?.token_type  || '');
+      localStorage.setItem('token_type', data?.result?.token_type || '');
       localStorage.setItem('autoLogin', autoLogin?.toString() || 'false');
 
       await fetchUserInfo();
@@ -119,66 +116,116 @@ const Login: React.FC = () => {
   };
   return (
     <div className={styles.container}>
-      <Helmet>
-        <title>
-          {'登录'}- {Settings.title}
-        </title>
-      </Helmet>
+      {/*<Helmet>*/}
+      {/*  <title>*/}
+      {/*    {'登录'}- {Settings.title}*/}
+      {/*  </title>*/}
+      {/*</Helmet>*/}
       <div
         style={{
           flex: '1',
           padding: '32px 0',
         }}
       >
-        <LoginForm
-          contentStyle={{
-            minWidth: 280,
-            maxWidth: '75vw',
-          }}
+        <LoginFormPage
+          // backgroundImageUrl="https://gw.alipayobjects.com/zos/rmsportal/FfdJeJRQWjEeGTpqgBKj.png"
           logo={<img alt="logo" src="http://47.93.181.181:9000/bread/project/icon.png"/>}
           title="Bread Web"
           subTitle={'Bread Web 最具影响力的 Web 设计规范'}
-          initialValues={{
-            autoLogin: true,
-          }}
-          actions={['其他登录方式 :', <ActionIcons key="icons"/>]}
+          actions={
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+              }}
+            >
+              <Divider plain>
+              <span
+                style={{color: '#CCC', fontWeight: 'normal', fontSize: 14}}
+              >
+                其他登录方式
+              </span>
+              </Divider>
+              <Space align="center" size={24}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    height: 40,
+                    width: 40,
+                    border: '1px solid #D4D8DD',
+                    borderRadius: '50%',
+                  }}
+                >
+                  <AlipayOutlined style={{...iconStyles, color: '#1677FF'}}/>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    height: 40,
+                    width: 40,
+                    border: '1px solid #D4D8DD',
+                    borderRadius: '50%',
+                  }}
+                >
+                  <TaobaoOutlined style={{...iconStyles, color: '#FF6A10'}}/>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    height: 40,
+                    width: 40,
+                    border: '1px solid #D4D8DD',
+                    borderRadius: '50%',
+                  }}
+                >
+                  <WeiboOutlined style={{...iconStyles, color: '#333333'}}/>
+                </div>
+              </Space>
+            </div>
+          }
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
         >
-
-
-          <>
-            <ProFormText
-              name="username"
-              fieldProps={{
-                size: 'large',
-                prefix: <UserOutlined/>,
-              }}
-              placeholder={'用户名: string'}
-              rules={[
-                {
-                  required: true,
-                  message: '用户名是必填项！',
-                },
-              ]}
-            />
-            <ProFormText.Password
-              name="password"
-              fieldProps={{
-                size: 'large',
-                prefix: <LockOutlined/>,
-              }}
-              placeholder={'密码: string'}
-              rules={[
-                {
-                  required: true,
-                  message: '密码是必填项！',
-                },
-              ]}
-            />
-          </>
-
+          <ProFormText
+            name="username"
+            fieldProps={{
+              size: 'large',
+              prefix: <UserOutlined/>,
+            }}
+            placeholder={'用户名: string'}
+            rules={[
+              {
+                required: true,
+                message: '用户名是必填项！',
+              },
+            ]}
+          />
+          <ProFormText.Password
+            name="password"
+            fieldProps={{
+              size: 'large',
+              prefix: <LockOutlined/>,
+            }}
+            placeholder={'密码: string'}
+            rules={[
+              {
+                required: true,
+                message: '密码是必填项！',
+              },
+            ]}
+          />
           <div
             style={{
               marginBottom: 24,
@@ -195,7 +242,7 @@ const Login: React.FC = () => {
               忘记密码 ?
             </a>
           </div>
-        </LoginForm>
+        </LoginFormPage>
       </div>
       <Footer/>
     </div>
