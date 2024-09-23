@@ -332,10 +332,28 @@ declare namespace API {
     description?: string;
     type?: NoticeIconItemType;
   };
-  type getListTestcaseTreeParams = {
+  type getListTestcaseDirectoryParams = {
     /** project_id */
     project_id: number;
     /** move */
     move?: boolean;
+  };
+  type postTestcaseDirectoryParams = {
+    /** name */
+    name: string;
+    /** project_id */
+    project_id: number;
+    /** parent */
+    parent: number | null;
+  };
+  type putTestcaseDirectoryParams = {
+    /** name */
+    name: string;
+    /** project_id */
+    project_id: number;
+    /** parent */
+    parent?: number;
+    /** id */
+    id: number;
   };
 }

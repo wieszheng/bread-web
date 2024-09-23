@@ -17,7 +17,7 @@ interface ResponseStructure {
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const errorConfig: RequestConfig = {
-  baseURL: BACKEND_HOST_PROD,
+  baseURL: BACKEND_HOST_LOCAL,
 
   // 错误处理： umi@3 的错误处理方案。
   errorConfig: {

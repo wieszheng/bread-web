@@ -9,7 +9,7 @@ import {FolderCode} from "@icon-park/react";
 const dataList: any[] = [];
 const SearchTree: React.FC<any> = ({
                                      treeData,
-                                     blockNode,
+                                     menu,
                                      onAddNode,
                                      selectedKeys,
                                      onSelect,
@@ -77,18 +77,6 @@ const SearchTree: React.FC<any> = ({
       };
     });
 
-  const items: MenuProps['items'] = [
-    {
-      label: <a><EditOutlined/> 编辑目录</a>,
-      key: '1',
-      onClick: () => handleMenuClick(2, nodeKey),
-    },
-    {
-      label: <a><DeleteOutlined/> 删除目录</a>,
-      key: '2',
-      onClick: () => handleMenuClick(3, nodeKey),
-    },
-  ];
   const titleRender = (nodeData: any) => {
     return (
       <div onMouseOver={() => setNodeKey(nodeData.key)} onMouseLeave={() => setNodeKey(null)}>
@@ -101,9 +89,7 @@ const SearchTree: React.FC<any> = ({
               e.stopPropagation();
               onAddNode(nodeData)
             }} className="icon-left"/>
-            <Dropdown menu={{
-              items
-            }} trigger={['click']}>
+            <Dropdown overlay={menu(nodeData)} trigger={['click']}>
               <MoreOutlined className="icon-right" onClick={e => {
                 e.stopPropagation()
               }}/>
@@ -128,7 +114,7 @@ const SearchTree: React.FC<any> = ({
       <Tree
         onExpand={onExpand}
         defaultExpandAll
-        blockNode={blockNode}
+        blockNode={true}
         selectedKeys={selectedKeys}
         onSelect={onSelect}
         expandedKeys={expandedKeys}
