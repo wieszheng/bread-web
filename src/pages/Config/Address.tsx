@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {
   ActionType,
   ModalForm,
@@ -32,17 +32,13 @@ const Address: React.FC = () => {
   const [data, setData] = useState<API.CurrentEnvironment[]>([]);
   const actionRef = useRef<ActionType>();
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getEnvironments({current: 1, pageSize: 99});
-        setData(response.result.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-
-      }
-    };
-    fetchData();
+    try {
+      getEnvironments({current: 1, pageSize: 99}).then((res) => {
+        if (res.success) {
+          setData(res.result.data);
+        }
+      });
+    } catch (error: any) {}
   }, []);
 
   const columns: ProColumns<API.CurrentAddress>[] = [
@@ -283,5 +279,4 @@ const Address: React.FC = () => {
     </ModalForm>
   </PageContainer>
 }
-
-export default memo(Address)
+export default Address

@@ -19,156 +19,61 @@
           background-size: 100% auto;
         }
 
-        .loading-title {
-          font-size: 1.1rem;
-        }
 
-        .loading-sub-title {
-          margin-top: 20px;
-          font-size: 1rem;
-          color: #888;
-        }
 
-        .page-loading-warp {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 26px;
+        @keyframes bounce {
+          0%,
+          100% {
+            translate: 0px 36px;
+          }
+          50% {
+            translate: 0px 46px;
+          }
         }
-        .ant-spin {
-          position: absolute;
-          display: none;
-          -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-          color: rgba(0, 0, 0, 0.65);
-          color: #1890ff;
-          font-size: 14px;
-          font-variant: tabular-nums;
-          line-height: 1.5;
-          text-align: center;
-          list-style: none;
-          opacity: 0;
-          -webkit-transition: -webkit-transform 0.3s
-            cubic-bezier(0.78, 0.14, 0.15, 0.86);
-          transition: -webkit-transform 0.3s
-            cubic-bezier(0.78, 0.14, 0.15, 0.86);
-          transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-          transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
-            -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-          -webkit-font-feature-settings: "tnum";
-          font-feature-settings: "tnum";
-        }
-
-        .ant-spin-spinning {
-          position: static;
-          display: inline-block;
-          opacity: 1;
-        }
-
-        .ant-spin-dot {
-          position: relative;
-          display: inline-block;
-          width: 20px;
-          height: 20px;
-          font-size: 20px;
-        }
-
-        .ant-spin-dot-item {
-          position: absolute;
-          display: block;
-          width: 9px;
-          height: 9px;
-          background-color: #1890ff;
-          border-radius: 100%;
-          -webkit-transform: scale(0.75);
-          -ms-transform: scale(0.75);
-          transform: scale(0.75);
-          -webkit-transform-origin: 50% 50%;
-          -ms-transform-origin: 50% 50%;
-          transform-origin: 50% 50%;
-          opacity: 0.3;
-          -webkit-animation: antspinmove 1s infinite linear alternate;
-          animation: antSpinMove 1s infinite linear alternate;
-        }
-
-        .ant-spin-dot-item:nth-child(1) {
-          top: 0;
-          left: 0;
-        }
-
-        .ant-spin-dot-item:nth-child(2) {
-          top: 0;
-          right: 0;
-          -webkit-animation-delay: 0.4s;
-          animation-delay: 0.4s;
-        }
-
-        .ant-spin-dot-item:nth-child(3) {
-          right: 0;
-          bottom: 0;
-          -webkit-animation-delay: 0.8s;
-          animation-delay: 0.8s;
-        }
-
-        .ant-spin-dot-item:nth-child(4) {
-          bottom: 0;
-          left: 0;
-          -webkit-animation-delay: 1.2s;
-          animation-delay: 1.2s;
-        }
-
-        .ant-spin-dot-spin {
-          -webkit-transform: rotate(45deg);
-          -ms-transform: rotate(45deg);
-          transform: rotate(45deg);
-          -webkit-animation: antrotate 1.2s infinite linear;
-          animation: antRotate 1.2s infinite linear;
-        }
-
-        .ant-spin-lg .ant-spin-dot {
-          width: 32px;
-          height: 32px;
-          font-size: 32px;
-        }
-
-        .ant-spin-lg .ant-spin-dot i {
-          width: 14px;
-          height: 14px;
-        }
-
-        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-          .ant-spin-blur {
-            background: #fff;
-            opacity: 0.5;
+        @keyframes bounce2 {
+          0%,
+          100% {
+            translate: 0px 46px;
+          }
+          50% {
+            translate: 0px 56px;
           }
         }
 
-        @-webkit-keyframes antSpinMove {
-          to {
-            opacity: 1;
+        @keyframes umbral {
+          0% {
+            stop-color: #d3a5102e;
+          }
+          50% {
+            stop-color: rgba(211, 165, 16, 0.519);
+          }
+          100% {
+            stop-color: #d3a5102e;
           }
         }
-
-        @keyframes antSpinMove {
-          to {
-            opacity: 1;
+        @keyframes partciles {
+          0%,
+          100% {
+            translate: 0px 16px;
+          }
+          50% {
+            translate: 0px 6px;
           }
         }
-
-        @-webkit-keyframes antRotate {
-          to {
-            -webkit-transform: rotate(405deg);
-            transform: rotate(405deg);
-          }
+        #particles {
+          animation: partciles 4s ease-in-out infinite;
         }
-
-        @keyframes antRotate {
-          to {
-            -webkit-transform: rotate(405deg);
-            transform: rotate(405deg);
-          }
+        #animatedStop {
+          animation: umbral 4s infinite;
+        }
+        #bounce {
+          animation: bounce 4s ease-in-out infinite;
+          translate: 0px 36px;
+        }
+        #bounce2 {
+          animation: bounce2 4s ease-in-out infinite;
+          translate: 0px 46px;
+          animation-delay: 0.5s;
         }
       </style>
 
@@ -180,19 +85,130 @@
         height: 100%;
         min-height: 362px;
       ">
-        <div class="page-loading-warp">
-          <div class="ant-spin ant-spin-lg ant-spin-spinning">
-            <span class="ant-spin-dot ant-spin-dot-spin">
-              <i class="ant-spin-dot-item"></i>
-              <i class="ant-spin-dot-item"></i>
-              <i class="ant-spin-dot-item"></i>
-              <i class="ant-spin-dot-item"></i>
-            </span>
-          </div>
-        </div>
-        <div class="loading-title">
-          正在加载资源
-        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" height="200" width="200">
+          <g style="order: -1;">
+            <polygon
+              transform="rotate(45 100 100)"
+              stroke-width="1"
+              stroke="#d3a410"
+              fill="none"
+              points="70,70 148,50 130,130 50,150"
+              id="bounce"
+            ></polygon>
+            <polygon
+              transform="rotate(45 100 100)"
+              stroke-width="1"
+              stroke="#d3a410"
+              fill="none"
+              points="70,70 148,50 130,130 50,150"
+              id="bounce2"
+            ></polygon>
+            <polygon
+              transform="rotate(45 100 100)"
+              stroke-width="2"
+              stroke=""
+              fill="#414750"
+              points="70,70 150,50 130,130 50,150"
+            ></polygon>
+            <polygon
+              stroke-width="2"
+              stroke=""
+              fill="url(#gradiente)"
+              points="100,70 150,100 100,130 50,100"
+            ></polygon>
+            <defs>
+              <linearGradient y2="100%" x2="10%" y1="0%" x1="0%" id="gradiente">
+                <stop style="stop-color: #1e2026;stop-opacity:1" offset="20%"></stop>
+                <stop style="stop-color:#414750;stop-opacity:1" offset="60%"></stop>
+              </linearGradient>
+            </defs>
+            <polygon
+              transform="translate(20, 31)"
+              stroke-width="2"
+              stroke=""
+              fill="#b7870f"
+              points="80,50 80,75 80,99 40,75"
+            ></polygon>
+            <polygon
+              transform="translate(20, 31)"
+              stroke-width="2"
+              stroke=""
+              fill="url(#gradiente2)"
+              points="40,-40 80,-40 80,99 40,75"
+            ></polygon>
+            <defs>
+              <linearGradient y2="100%" x2="0%" y1="-17%" x1="10%" id="gradiente2">
+                <stop style="stop-color: #d3a51000;stop-opacity:1" offset="20%"></stop>
+                <stop
+                  style="stop-color:#d3a51054;stop-opacity:1"
+                  offset="100%"
+                  id="animatedStop"
+                ></stop>
+              </linearGradient>
+            </defs>
+            <polygon
+              transform="rotate(180 100 100) translate(20, 20)"
+              stroke-width="2"
+              stroke=""
+              fill="#d3a410"
+              points="80,50 80,75 80,99 40,75"
+            ></polygon>
+            <polygon
+              transform="rotate(0 100 100) translate(60, 20)"
+              stroke-width="2"
+              stroke=""
+              fill="url(#gradiente3)"
+              points="40,-40 80,-40 80,85 40,110.2"
+            ></polygon>
+            <defs>
+              <linearGradient y2="100%" x2="10%" y1="0%" x1="0%" id="gradiente3">
+                <stop style="stop-color: #d3a51000;stop-opacity:1" offset="20%"></stop>
+                <stop
+                  style="stop-color:#d3a51054;stop-opacity:1"
+                  offset="100%"
+                  id="animatedStop"
+                ></stop>
+              </linearGradient>
+            </defs>
+            <polygon
+              transform="rotate(45 100 100) translate(80, 95)"
+              stroke-width="2"
+              stroke=""
+              fill="#ffe4a1"
+              points="5,0 5,5 0,5 0,0"
+              id="particles"
+            ></polygon>
+            <polygon
+              transform="rotate(45 100 100) translate(80, 55)"
+              stroke-width="2"
+              stroke=""
+              fill="#ccb069"
+              points="6,0 6,6 0,6 0,0"
+              id="particles"
+            ></polygon>
+            <polygon
+              transform="rotate(45 100 100) translate(70, 80)"
+              stroke-width="2"
+              stroke=""
+              fill="#fff"
+              points="2,0 2,2 0,2 0,0"
+              id="particles"
+            ></polygon>
+            <polygon
+              stroke-width="2"
+              stroke=""
+              fill="#292d34"
+              points="29.5,99.8 100,142 100,172 29.5,130"
+            ></polygon>
+            <polygon
+              transform="translate(50, 92)"
+              stroke-width="2"
+              stroke=""
+              fill="#1f2127"
+              points="50,50 120.5,8 120.5,35 50,80"
+            ></polygon>
+          </g>
+        </svg>
         <div class="loading-sub-title">
           初次加载资源可能需要较多时间 请耐心等待
         </div>

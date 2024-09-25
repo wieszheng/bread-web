@@ -14,7 +14,6 @@ const SearchTree: React.FC<any> = ({
                                      selectedKeys,
                                      onSelect,
                                      addDirectory,
-                                     handleMenuClick
                                    }) => {
   const [expandedKeys, setExpandedKeys] = useState<any>([]);
   const [searchValue, setSearchValue] = useState('');

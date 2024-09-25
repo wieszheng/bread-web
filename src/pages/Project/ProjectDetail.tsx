@@ -4,9 +4,9 @@ import {Avatar} from "antd";
 import {PROJECT_AVATAR_URL} from "@/constan";
 import {getProject} from "@/services/admin/project";
 import {useParams} from "@umijs/max";
-import ProjectRole from "@/pages/ApiTest/components/ProjectRole";
+import ProjectRole from "@/pages/Project/components/ProjectRole";
 import {getUsers} from "@/services/admin/user";
-import ProjectInfo from "@/pages/ApiTest/components/ProjectInfo";
+import ProjectInfo from "@/pages/Project/components/ProjectInfo";
 
 
 const ProjectDetail: React.FC = () => {
@@ -35,7 +35,7 @@ const ProjectDetail: React.FC = () => {
   useEffect(() => {
     fetchUsers();
     fetchData();
-  }, [projectData, roles]);
+  }, []);
   return <PageContainer
     header={{
       title: <PageHeader
