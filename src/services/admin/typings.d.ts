@@ -342,7 +342,7 @@ declare namespace API {
     /** name */
     name: string;
     /** project_id */
-    project_id: number;
+    project_id: number | null;
     /** parent */
     parent: number | null;
   };
@@ -350,9 +350,13 @@ declare namespace API {
     /** name */
     name: string;
     /** project_id */
-    project_id: number;
+    project_id: number | null;
     /** parent */
     parent?: number;
+    /** id */
+    id: number;
+  };
+  type deleteTestcaseDirectoryParams = {
     /** id */
     id: number;
   };

@@ -45,3 +45,17 @@ export async function putTestcaseDirectory(
     ...(options || {}),
   });
 }
+
+/** DELETE /api/v1/testcase/directory */
+export async function deleteTestcaseDirectory(
+  params: API.deleteTestcaseDirectoryParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.CommonResponse>('/testcase/directory', {
+    method: 'DELETE',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

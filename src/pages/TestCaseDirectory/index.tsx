@@ -1,24 +1,56 @@
-import React, {memo, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import type {ReactNode} from 'react'
-import {getListTestcaseDirectory, postTestcaseDirectory, putTestcaseDirectory} from "@/services/admin/testcase";
+import {
+  deleteTestcaseDirectory,
+  getListTestcaseDirectory,
+  postTestcaseDirectory,
+  putTestcaseDirectory
+} from "@/services/admin/testcase";
 import {getProjects} from "@/services/admin/project";
-import {ModalForm, PageContainer, ProCard, ProFormText} from "@ant-design/pro-components";
-import {Avatar, Col, Dropdown, Empty, Input, message, Result, Row, Select, Tooltip, Tree} from "antd";
-import type { MenuProps } from 'antd';
+import {ModalForm, PageContainer, ProCard, ProColumns, ProFormText, ProTable} from "@ant-design/pro-components";
+import {
+  Avatar,
+  Button,
+  Col,
+  Dropdown,
+  Empty,
+  Form,
+  Input,
+  message,
+  Modal,
+  Popconfirm,
+  Result,
+  Row,
+  Select,
+  Tooltip,
+  Tree
+} from "antd";
 import SplitPane from "react-split-pane";
 import ScrollCard from "@/components/Scrollbar/ScrollCard";
 import {PROJECT_AVATAR_URL} from "@/constan";
 import {Switch,FolderCode} from "@icon-park/react";
-import {PlusOutlined, MoreOutlined, SearchOutlined} from "@ant-design/icons";
+import {
+  PlusOutlined,
+  MoreOutlined,
+  SearchOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+  ReloadOutlined, ExportOutlined, EditTwoTone, DeleteTwoTone, DownOutlined, PlayCircleOutlined
+} from "@ant-design/icons";
 import "./index.less"
 import noRecord from "@/assets/no_record.svg";
+import emptyWork from "@/assets/emptyWork.svg"
 import {useSetState} from "ahooks";
+import {Access} from "@/components/Boot/Access";
+import {deleteAddressId} from "@/services/admin/address";
 
 interface IProps {
   children?: ReactNode
 }
 
 const {Option} = Select;
+const {confirm} = Modal;
 type operateType = "add" | "see" | "up";
 type ModalType = {
   operateType: operateType;
@@ -30,6 +62,7 @@ const TestCaseRecorder: React.FC<IProps> = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [directories, setDirectories] = useState([]);
+  const [currentDirectory, setCurrentDirectory] = useState<any[]>([]);
   const [editing, setEditing] = useState(false);
   const [showToolIndex, setShowToolIndex] = useState('');
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
@@ -40,9 +73,10 @@ const TestCaseRecorder: React.FC<IProps> = () => {
     record: {}
   });
   const [searchValue, setSearchValue] = useState('');
-  const [keys, setKeys] = useState<any[]>([]);
 
+  const [form] = Form.useForm<{ name: string; company: string }>();
   const [parentId, setParentId] = useState('');
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   // 获取项目列表
   useEffect(() => {
     getProjects({current: 1, pageSize: 99}).then(resp => {
@@ -59,16 +93,16 @@ const TestCaseRecorder: React.FC<IProps> = () => {
     if (selectedProjectId) {
       getListTestcaseDirectory({project_id: selectedProjectId}).then(resp => {
         setDirectories(resp.result.data);
-        setKeys(resp.result.data?.length > 0 ? [resp.result.data[0].key] : []);
+        setCurrentDirectory(resp.result.data?.length > 0 ? [resp.result.data[0].key] : []);
       })
     }
   }, [selectedProjectId]);
 
   useEffect(() => {
-    if (keys.length) {
-      setParentId(keys[0]);
+    if (currentDirectory.length) {
+      setParentId(currentDirectory[0]);
     }
-  }, [keys]);
+  }, [currentDirectory]);
   // 修改、新增或删除目录后刷新目录数据
   const refreshDirectories = async () => {
     if (selectedProjectId) {
@@ -118,18 +152,75 @@ const TestCaseRecorder: React.FC<IProps> = () => {
     const filteredKeys = filterTreeData(directories, value);
     setExpandedKeys(filteredKeys);
   };
-  const items: MenuProps['items'] = [
+  const columns: ProColumns<any>[] = [
     {
-      key: '1',
-      danger: true,
-      label: 'a danger item',
+      title: 'ID',
+      key: 'id',
+      width: '5%',
+      dataIndex: 'id',
+      hideInForm: true,
+      search: false,
     },
     {
-      key: '2',
-      label: 'a danger item',
+      title: 'KEY',
+      key: 'key',
+      dataIndex: 'key',
+      search: false,
     },
-  ]
+    {
+      title: 'VALUE',
+      key: 'value',
+      dataIndex: 'value',
+      search: false,
+    },
+    {
+      title: 'DESCRIPTION',
+      key: 'description',
+      dataIndex: 'description',
+      search: false,
+    },
+    {
+      title: '操作',
+      dataIndex: 'option',
+      valueType: 'option',
+      hideInDescriptions: true,
+      hideInForm: true,
+      width: '12%',
+      render: (_, record) => [
+        <Access key={'update'} accessible={true}>
+          <Tooltip placement="top" title="修改">
+            <EditTwoTone
+              style={{cursor: 'pointer'}}
+            />
+          </Tooltip>
+        </Access>,
+        <Access key={'delete'}>
+          <Popconfirm
+            key='delete'
+            title='删除'
+            description={'您确定要删除此记录吗?'}
+            okText={'好的'}
+            cancelText={'取消'}
+            onConfirm={async () => {
+              await deleteAddressId({address_id: record.id});
+              // actionRef.current?.reload()
+            }}
+          >
+            <Tooltip placement="top" title="删除">
+              <DeleteTwoTone
+                style={{cursor: 'pointer', marginLeft: 8}}
+                onClick={() => {
+                  // onDelete(columnType, record.id);
+                }}
+                twoToneColor="#eb2f96"
+              />
+            </Tooltip>
 
+          </Popconfirm>
+        </Access>,
+      ]
+    }
+  ]
   return (
     <PageContainer>
       {
@@ -154,6 +245,7 @@ const TestCaseRecorder: React.FC<IProps> = () => {
                 title={{add: "新增", up: "修改", see: "查看信息"}[modal.operateType]}
                 width="450px"
                 open={rootModal}
+                form={form}
                 onOpenChange={setRootModal}
                 onFinish={async (values) => {
                   const params = {
@@ -286,10 +378,10 @@ const TestCaseRecorder: React.FC<IProps> = () => {
                             blockNode={true}
                             defaultExpandAll
                             treeData={loop(directories)}
-                            selectedKeys={keys}
+                            selectedKeys={currentDirectory}
                             onSelect={(_keys: any[]) => {
                               if (_keys && _keys.length) {
-                                setKeys(_keys);
+                                setCurrentDirectory(_keys);
                               }
                             }}
                             expandedKeys={expandedKeys}
@@ -321,7 +413,42 @@ const TestCaseRecorder: React.FC<IProps> = () => {
                                         setRootModal(true)
                                       }}/>
 
-                                      <Dropdown menu={{items}} trigger={['click']}>
+                                      <Dropdown menu={{
+                                        items: [
+                                          {
+                                            key: '1',
+                                            label: <a onClick={() => {
+                                              setModal({
+                                                operateType: "up",
+                                                record: {id: nodeData.key}
+                                              })
+                                              form.setFieldsValue({name: nodeData.title.props.children[2]})
+                                              setRootModal(true)
+                                            }}><EditOutlined/> 编辑目录</a>,
+                                          },
+                                          {
+                                            key: '2',
+                                            danger: true,
+                                            label: <a onClick={() => {
+                                              confirm({
+                                                title: '确定删除该目录吗？',
+                                                icon: <ExclamationCircleOutlined/>,
+                                                content: '删除后，目录下的case也将不再可见！！！',
+                                                okText: '确定',
+                                                okType: 'danger',
+                                                cancelText: '点错了',
+                                                onOk() {
+                                                  deleteTestcaseDirectory({id:nodeData.key}).then(async r => {
+                                                    message.success(r?.message)
+                                                    await refreshDirectories()
+                                                  });
+
+                                                },
+                                              })
+                                            }}><DeleteOutlined/> 删除目录</a>,
+                                          },
+                                        ],
+                                      }} trigger={['click']}>
                                         <MoreOutlined className="icon-right"/>
                                       </Dropdown>
                                     </span>
@@ -362,6 +489,112 @@ const TestCaseRecorder: React.FC<IProps> = () => {
                     }
                   </div>
                 </ScrollCard>
+                <ScrollCard className="card" hideOverflowX={false}>
+                  {
+                    currentDirectory.length > 0 ? (
+                      <>
+                        <Form form={form}>
+                          <Row gutter={6}>
+                            <Col span={8}>
+                              <Form.Item label="用例名称" name="name">
+                                <Input placeholder="输入用例名称"/>
+                              </Form.Item>
+                            </Col>
+                            <Col span={8}>
+                              <Form.Item label="创建人" name="create_user">
+
+                              </Form.Item>
+                            </Col>
+                            <Col span={8}>
+                              <div style={{float: 'right'}}>
+                                <Button
+                                  type="primary"
+                                  onClick={async () => {
+                                    // await listTestcase();
+                                  }}
+                                >
+                                  <SearchOutlined/> 查询
+                                </Button>
+                                <Button
+                                  style={{marginLeft: 8}}
+                                  onClick={async () => {
+                                    form.resetFields();
+                                    // await listTestcase();
+                                  }}
+                                >
+                                  <ReloadOutlined/> 重置
+                                </Button>
+                              </div>
+                            </Col>
+                          </Row>
+                        </Form>
+                        <Row gutter={8} style={{marginTop: 4}}>
+                          <Col span={24}>
+                            <Dropdown trigger={['click']}>
+                              <Button type="primary">
+                                <PlusOutlined/> 新建场景
+                              </Button>
+                            </Dropdown>
+                            {selectedRowKeys.length > 0 ? (
+                              <Dropdown trigger={['hover']}>
+                                <Button
+                                  style={{marginLeft: 8}}
+                                  icon={<PlayCircleOutlined/>}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                  }}
+                                >
+                                  执行用例 <DownOutlined/>
+                                </Button>
+                              </Dropdown>
+                            ) : null}
+                            {
+                              selectedRowKeys.length > 0 ? (
+                                <Button
+                                  type="dashed"
+                                  style={{marginLeft: 8}}
+                                  icon={<ExportOutlined/>}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    // onMoveTestCase();
+                                  }}
+                                >
+                                  移动用例
+                                </Button>
+                              ) : null}
+                            {
+                              selectedRowKeys.length > 0 ? (
+                                <Button
+                                  type="dashed"
+                                  style={{marginLeft: 8}}
+                                  icon={<DeleteOutlined/>}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                  }}
+                                >
+                                  删除用例
+                                </Button>
+                              ) : null}
+                          </Col>
+                        </Row>
+                        <Row style={{marginTop: 16}}>
+                          <Col span={24}>
+                            <ProTable
+                              columns={columns}
+                              dataSource={[{'Key': 'No Data'}]}
+                            />
+                          </Col>
+                        </Row>
+                      </>
+                    ) : (
+                      <Empty
+                        image={emptyWork}
+                        imageStyle={{height: 230}}
+                        description="快选中左侧的目录畅享用例之旅吧~"
+                      />
+                    )
+                  }
+                </ScrollCard>
               </SplitPane>
             </Row>
           </ProCard>
@@ -372,4 +605,4 @@ const TestCaseRecorder: React.FC<IProps> = () => {
   )
 }
 
-export default memo(TestCaseRecorder)
+export default TestCaseRecorder;
